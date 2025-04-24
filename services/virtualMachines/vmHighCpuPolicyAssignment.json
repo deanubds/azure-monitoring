@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "policyDefinitionId": {
+        "type": "string"
+      },
+      "alertActionGroupId": {
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Authorization/policyAssignments",
+        "apiVersion": "2021-06-01",
+        "name": "assign-vm-highcpu",
+        "properties": {
+          "displayName": "Assign AMBA High CPU VM Alert (Production Only)",
+          "description": "Assigns the policy to automatically deploy a High CPU alert to Production-tagged VMs.",
+          "policyDefinitionId": "[parameters('policyDefinitionId')]",
+          "enforcementMode": "Default",
+          "parameters": {
+            "alertActionGroupId": {
+              "value": "[parameters('alertActionGroupId')]"
+            }
+          }
+        }
+      }
+    ]
+  }
+  

@@ -1,86 +1,118 @@
 {
-    "properties": {
-      "displayName": "Deploy High CPU Alert Rule to VMs",
-      "policyType": "Custom",
-      "mode": "Indexed",
-      "description": "Deploys a High CPU alert rule to any VM missing one, using a user-assigned managed identity.",
+  "mode": "Indexed",
+  "parameters": {
+    "managedIdentityId": {
+      "type": "String",
       "metadata": {
-        "version": "1.0.0",
-        "category": "Monitoring"
-      },
-      "parameters": {
-        "alertActionGroupId": {
-          "type": "String",
-          "metadata": {
-            "displayName": "Action Group Resource ID",
-            "description": "Resource ID of the action group used in the alert rule"
-          }
+        "displayName": "Managed Identity ID",
+        "description": "Resource ID of the user-assigned managed identity to use for policy deployment"
+      }
+    },
+    "alertActionGroupId": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Action Group ID",
+        "description": "Resource ID of the Action Group to trigger alerts"
+      }
+    }
+  },
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachines"
         },
-        "managedIdentityId": {
-          "type": "String",
-          "metadata": {
-            "displayName": "Managed Identity Resource ID",
-            "description": "User-assigned managed identity used to deploy the alert"
-          }
-        },
-        "templateUri": {
-          "type": "String",
-          "metadata": {
-            "displayName": "Template URI",
-            "description": "URI of the ARM template to deploy"
-          }
+        {
+          "field": "tags['Environment']",
+          "equals": "Production"
         }
-      },
-      "policyRule": {
-        "if": {
-          "allOf": [
-            {
-              "field": "type",
-              "equals": "Microsoft.Compute/virtualMachines"
-            },
-            {
-              "field": "tags['Environment']",
-              "equals": "Production"
-            }
-          ]
-        },
-        "then": {
-          "effect": "deployIfNotExists",
-          "details": {
-            "type": "Microsoft.Insights/metricAlerts",
-            "name": "[concat(field('name'), '-HighCPU')]",
-            "roleDefinitionIds": [
-              "/providers/Microsoft.Authorization/roleDefinitions/contributor"
-            ],
-            "deployment": {
-              "properties": {
-                "mode": "incremental",
-                "templateLink": {
-                  "uri": "[parameters('templateUri')]",
-                  "contentVersion": "1.0.0.0"
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/metricAlerts",
+        "name": "HighCPUUsage",
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "vmName": {
+                  "type": "string"
                 },
-                "parameters": {
-                  "vmName": {
-                    "value": "[field('name')]"
-                  },
-                  "location": {
-                    "value": "[field('location')]"
-                  },
-                  "actionGroupId": {
-                    "value": "[parameters('alertActionGroupId')]"
+                "location": {
+                  "type": "string"
+                },
+                "managedIdentityId": {
+                  "type": "string"
+                },
+                "alertActionGroupId": {
+                  "type": "string"
+                }
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Insights/metricAlerts",
+                  "apiVersion": "2018-03-01",
+                  "name": "[concat(parameters('vmName'), '-cpu')]",
+                  "location": "[parameters('location')]",
+                  "properties": {
+                    "severity": 3,
+                    "enabled": true,
+                    "scopes": [
+                      "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                    ],
+                    "evaluationFrequency": "PT5M",
+                    "windowSize": "PT15M",
+                    "criteria": {
+                      "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria",
+                      "allOf": [
+                        {
+                          "name": "High_CPU_Usage",
+                          "metricName": "Percentage CPU",
+                          "operator": "GreaterThan",
+                          "threshold": 80,
+                          "timeAggregation": "Average",
+                          "criterionType": "StaticThresholdCriterion"
+                        }
+                      ]
+                    },
+                    "autoMitigate": true,
+                    "targetResourceType": "Microsoft.Compute/virtualMachines",
+                    "targetResourceRegion": "[parameters('location')]",
+                    "actions": [
+                      {
+                        "actionGroupId": "[parameters('alertActionGroupId')]"
+                      }
+                    ]
                   }
                 }
-              }
-            },
-            "identity": {
-              "type": "UserAssigned",
-              "userAssignedIdentities": [
-                "[parameters('managedIdentityId')]"
               ]
+            },
+            "parameters": {
+              "vmName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "managedIdentityId": {
+                "value": "[parameters('managedIdentityId')]"
+              },
+              "alertActionGroupId": {
+                "value": "[parameters('alertActionGroupId')]"
+              }
             }
           }
         }
       }
     }
   }
-  
+}
