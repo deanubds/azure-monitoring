@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "actionGroupName": {
+      "type": "string"
+    },
+    "actionGroupShortName": {
+      "type": "string"
+    },
+    "actionGroupEmail": {
+      "type": "string"
+    },
+    "alertRuleTargetScopes": {
+      "type": "array"
+    },
+    "resourceTags": {
+      "type": "object"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/actionGroups",
+      "apiVersion": "2019-06-01",
+      "name": "[parameters('actionGroupName')]",
+      "location": "Global",
+      "properties": {
+        "groupShortName": "[parameters('actionGroupShortName')]",
+        "enabled": true,
+        "emailReceivers": [
+          {
+            "name": "Primary",
+            "emailAddress": "[parameters('actionGroupEmail')]"
+          }
+        ]
+      },
+      "tags": "[parameters('resourceTags')]"
+    },
+    {
+      "type": "Microsoft.Insights/metricAlerts",
+      "apiVersion": "2018-03-01",
+      "name": "HighCPUUsage",
+      "location": "Global",
+      "properties": {
+        "description": "Alert when CPU usage exceeds 80%",
+        "severity": 3,
+        "enabled": true,
+        "scopes": "[parameters('alertRuleTargetScopes')]",
+        "evaluationFrequency": "PT5M",
+        "windowSize": "PT5M",
+        "criteria": {
+          "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+          "allOf": [
+            {
+              "metricName": "Percentage CPU",
+              "metricNamespace": "Microsoft.Compute/virtualMachines",
+              "operator": "GreaterThan",
+              "threshold": 80,
+              "timeAggregation": "Average",
+              "criterionType": "StaticThresholdCriterion",
+              "name": "HighCPU"
+            }
+          ]
+        },
+        "actions": [
+          {
+            "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', parameters('actionGroupName'))]"
+          }
+        ],
+        "autoMitigate": true
+      },
+      "tags": "[parameters('resourceTags')]"
+    }
+  ]
+}

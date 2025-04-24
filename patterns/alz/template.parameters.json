@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "resourceTags": {
+        "value": {
+          "Environment": "Production"
+        }
+      },
+      "resourceGroupName": {
+        "value": "rg-monitoring-prod"
+      },
+      "alertRuleTargetScopes": {
+        "value": [
+          "/subscriptions/42c6a6c1-842a-467d-bfe8-2c1017c35a26/resourceGroups/rg-hub-prod-uks-001",
+          "/subscriptions/42c6a6c1-842a-467d-bfe8-2c1017c35a26/resourceGroups/rg-hub-prod-ukw-001",
+          "/subscriptions/08b7fe2b-5942-48e7-977d-65578119e87d/resourceGroups/rg-id-prod-uks-001",
+          "/subscriptions/08b7fe2b-5942-48e7-977d-65578119e87d/resourceGroups/rg-id-prod-ukw-001",
+          "/subscriptions/8a55a570-450e-43ed-add1-b87e9dd51066/resourceGroups/temp_static_webpage"
+        ]
+      },
+      "actionGroupName": {
+        "value": "ActionGroup-NotifyDean"
+      },
+      "actionGroupShortName": {
+        "value": "NotifyDean"
+      },
+      "actionGroupEmail": {
+        "value": "dean.emerson@ubdsdigital.com"
+      }
+    }
+  }
+  

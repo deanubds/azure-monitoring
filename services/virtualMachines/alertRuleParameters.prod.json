@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "actionGroupName": {
+        "value": "ag-vm-alerts"
+      },
+      "actionGroupShortName": {
+        "value": "VMAlerts"
+      },
+      "actionGroupEmail": {
+        "value": "dean.emerson@ubdsdigital.com"
+      },
+      "alertRuleTargetScopes": {
+        "value": [
+          "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-mgmt-prod-uks-001",
+          "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-mgmt-prod-ukw-001"
+        ]
+      },
+      "resourceTags": {
+        "value": {
+          "Environment": "Production",
+          "Purpose": "Monitoring"
+        }
+      }
+    }
+  }

@@ -1,0 +1,86 @@
+{
+    "properties": {
+      "displayName": "Deploy High CPU Alert Rule to VMs",
+      "policyType": "Custom",
+      "mode": "Indexed",
+      "description": "Deploys a High CPU alert rule to any VM missing one, using a user-assigned managed identity.",
+      "metadata": {
+        "version": "1.0.0",
+        "category": "Monitoring"
+      },
+      "parameters": {
+        "alertActionGroupId": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Action Group Resource ID",
+            "description": "Resource ID of the action group used in the alert rule"
+          }
+        },
+        "managedIdentityId": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Managed Identity Resource ID",
+            "description": "User-assigned managed identity used to deploy the alert"
+          }
+        },
+        "templateUri": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Template URI",
+            "description": "URI of the ARM template to deploy"
+          }
+        }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Compute/virtualMachines"
+            },
+            {
+              "field": "tags['Environment']",
+              "equals": "Production"
+            }
+          ]
+        },
+        "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+            "type": "Microsoft.Insights/metricAlerts",
+            "name": "[concat(field('name'), '-HighCPU')]",
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/contributor"
+            ],
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                  "uri": "[parameters('templateUri')]",
+                  "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                  "vmName": {
+                    "value": "[field('name')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "actionGroupId": {
+                    "value": "[parameters('alertActionGroupId')]"
+                  }
+                }
+              }
+            },
+            "identity": {
+              "type": "UserAssigned",
+              "userAssignedIdentities": [
+                "[parameters('managedIdentityId')]"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+  
