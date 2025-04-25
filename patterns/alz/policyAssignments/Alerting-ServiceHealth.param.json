@@ -1,0 +1,20 @@
+{
+  "actionGroupResourceIdSecurity": {
+    "value": "/subscriptions/7AE51D37-EC98-4553-B702-7B48F21475F6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ag-BL-Sec"
+  },
+  "actionGroupResourceIdProduction": {
+    "value": "/subscriptions/7AE51D37-EC98-4553-B702-7B48F21475F6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ag-BL-Prod"
+  },
+  "actionGroupResourceIdIdentity": {
+    "value": "/subscriptions/7AE51D37-EC98-4553-B702-7B48F21475F6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ag-BL-Ident"
+  },
+  "actionGroupResourceIdConnectivity": {
+    "value": "/subscriptions/7AE51D37-EC98-4553-B702-7B48F21475F6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ag-BL-Conn"
+  },
+  "actionGroupResourceIdManagement": {
+    "value": "/subscriptions/7AE51D37-EC98-4553-B702-7B48F21475F6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ag-BL-Mgmt"
+  },
+  "actionGroupResourceIdOnline": {
+    "value": "/subscriptions/7AE51D37-EC98-4553-B702-7B48F21475F6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ag-BL-Onli"
+  }
+}
