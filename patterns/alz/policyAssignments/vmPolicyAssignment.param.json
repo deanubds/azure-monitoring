@@ -1,1 +1,16 @@
-{"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#", "contentVersion": "1.0.0.0", "parameters": {"logAnalyticsWorkspaceResourceId": {"value": "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-management-prod-uks-001/providers/Microsoft.OperationalInsights/workspaces/log-management-prod-uks-001"}, "logAnalyticsWorkspaceResourceIdSecondary": {"value": "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-management-prod-ukw-001/providers/Microsoft.OperationalInsights/workspaces/log-management-prod-ukw-001"}}}
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "logAnalyticsWorkspaceResourceId": {
+        "value": "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-management-prod-uks-001/providers/Microsoft.OperationalInsights/workspaces/log-management-prod-uks-001"
+      },
+      "logAnalyticsWorkspaceResourceIdSecondary": {
+        "value": "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-management-prod-ukw-001/providers/Microsoft.OperationalInsights/workspaces/log-management-prod-ukw-001"
+      },
+      "actionGroupResourceId": {
+        "value": "/subscriptions/7ae51d37-ec98-4553-b702-7b48f21475f6/resourceGroups/rg-mgmt-prod-uks-001/providers/microsoft.insights/actionGroups/ambaBL-Production"
+      }
+    }
+  }
+  
